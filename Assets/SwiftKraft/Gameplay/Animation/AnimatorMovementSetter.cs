@@ -11,6 +11,7 @@ namespace SwiftKraft.Gameplay.Animation
         public new SmoothDampInterpolater Interpolater;
 
         [Header("Speed Changes")]
+        public bool EnableSpeedChanges = true;
         public string SpeedParameterName = "MovementMultiplier";
         public bool Raw;
         public float Multiplier = 1f;
@@ -32,7 +33,8 @@ namespace SwiftKraft.Gameplay.Animation
         {
             base.Update();
 
-            Animator.SetFloatSafe(SpeedParameterName, (Raw ? Motor.RawMoveFactorRate : Motor.MoveFactorRate) * (!multipliers.ContainsKey(Motor.State) ? 1f : multipliers[Motor.State]) * Multiplier);
+            if (EnableSpeedChanges)
+                Animator.SetFloatSafe(SpeedParameterName, (Raw ? Motor.RawMoveFactorRate : Motor.MoveFactorRate) * (!multipliers.ContainsKey(Motor.State) ? 1f : multipliers[Motor.State]) * Multiplier);
         }
 
         public override Interpolater AssignInterpolater() => Interpolater;
