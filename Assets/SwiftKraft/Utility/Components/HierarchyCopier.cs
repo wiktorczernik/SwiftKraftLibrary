@@ -6,6 +6,8 @@ namespace SwiftKraft.Utils
 {
     public class HierarchyCopier : MonoBehaviour
     {
+        public const string IgnoreTag = "NonRig";
+
         [SerializeField] private Transform sourceRoot;
         [SerializeField] private Transform targetRoot;
 
@@ -96,7 +98,7 @@ namespace SwiftKraft.Utils
             for (int i = 0; i < root.childCount; i++)
             {
                 var child = root.GetChild(i);
-                if (!child.gameObject.activeSelf)
+                if (!child.gameObject.activeSelf || child.CompareTag(IgnoreTag))
                     continue;
 
                 CollectActiveTransforms(child, list);
