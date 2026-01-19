@@ -8,12 +8,20 @@ namespace SwiftKraft.Gameplay.Animation
         [field: SerializeField]
         public Transform[] Roots { get; private set; } = new Transform[1];
 
-        public void Copy(Transform otherRoot, int index)
+        public void Copy(HierarchyCopier.Cache cache, int index)
         {
-            if (otherRoot == null || !Roots.InRange(index) || Roots[index] == null)
+            if (cache == null || !Roots.InRange(index) || Roots[index] == null)
                 return;
 
-            HierarchyCopier.Copy(otherRoot, Roots[index], false);
+            HierarchyCopier.Copy(cache, Roots[index]);
+        }
+
+        public void BuildCache(ref HierarchyCopier.Cache cache, Transform source, int index)
+        {
+            if (!Roots.InRange(index) || Roots[index] == null)
+                return;
+
+            HierarchyCopier.BuildCache(ref cache, source, Roots[index]);
         }
     }
 }

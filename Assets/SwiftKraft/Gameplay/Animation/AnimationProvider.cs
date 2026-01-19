@@ -1,3 +1,4 @@
+using SwiftKraft.Utils;
 using UnityEngine;
 
 namespace SwiftKraft.Gameplay.Animation
@@ -14,10 +15,15 @@ namespace SwiftKraft.Gameplay.Animation
         [field: SerializeField]
         public bool Active { get; set; } = true;
 
+        HierarchyCopier.Cache cache;
+
         private void Start()
         {
             if (Target == null)
                 Target = GetComponentInParent<AnimationReceiver>();
+
+            if (Target != null)
+                Target.BuildCache(ref cache, Root, RootIndex);
         }
 
         private void LateUpdate()
@@ -25,7 +31,9 @@ namespace SwiftKraft.Gameplay.Animation
             if (!Active || Target == null || Root == null)
                 return;
 
-            Target.Copy(Root, RootIndex);
+            if (cache == null)
+                Target.BuildCache(ref cache, Root, RootIndex);
+            Target.Copy(cache, RootIndex);
         }
     }
 }
