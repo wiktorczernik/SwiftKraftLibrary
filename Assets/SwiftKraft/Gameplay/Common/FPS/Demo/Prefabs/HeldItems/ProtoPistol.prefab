@@ -4946,7 +4946,7 @@ MonoBehaviour:
   AimOutAnimationID: AdsOut
   <Automatic>k__BackingField: 0
   <BulletCount>k__BackingField: 1
-  <MaxAmmo>k__BackingField: 4
+  <MaxAmmo>k__BackingField: 18
   CameraFOV: 70
   ViewModelFOV: 45
   OnAimTransition:
