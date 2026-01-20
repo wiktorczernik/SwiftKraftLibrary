@@ -4935,11 +4935,11 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     Default:
-      TotalTime: 2.3
-      FillTime: 1.15
+      TotalTime: 2
+      FillTime: 1.2
     Overrides:
-    - TotalTime: 2.5
-      FillTime: 1.15
+    - TotalTime: 2.4
+      FillTime: 1.2
       AmmoCount: 0
   UseAimTransition: 1
   AimInAnimationID: AdsIn

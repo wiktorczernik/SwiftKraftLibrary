@@ -7,7 +7,7 @@ namespace SwiftKraft.Debugging
     public class TransformTracker : MonoBehaviour
     {
         public bool OnlyShowSelected = false;
-        [SerializeReference, Subclass]
+        [SerializeReference, SubclassSelector]
         public GizmosDrawer[] CurrentDrawers;
 
         public TransformDataScale PreviousWorld { get; private set; }

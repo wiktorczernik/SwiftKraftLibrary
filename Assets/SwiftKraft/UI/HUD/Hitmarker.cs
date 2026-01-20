@@ -95,7 +95,7 @@ namespace SwiftKraft.UI.HUD
         public class Profile
         {
             public int Type;
-            [SerializeReference, Subclass]
+            [SerializeReference, SubclassSelector]
             public HitmarkerModule[] Modules;
 
             public void Init()

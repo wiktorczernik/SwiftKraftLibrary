@@ -1,7 +1,10 @@
-Required Packages:
+## Required Packages:
 
 TextMeshPro
 com.unity.textmeshpro
 
 Newtonsoft.Json
 com.unity.nuget.newtonsoft-json
+
+mackysoft's SerializeReferenceExtensions
+https://github.com/mackysoft/Unity-SerializeReferenceExtensions
