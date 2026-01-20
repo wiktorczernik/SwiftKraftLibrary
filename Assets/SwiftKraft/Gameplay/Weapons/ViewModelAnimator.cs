@@ -32,13 +32,19 @@ namespace SwiftKraft.Gameplay.Weapons
             Animator.runtimeAnimatorController = OverrideController;
         }
 
-        public void PlayAnimation(string id)
+        public void PlayAnimation(string id) => PlayAnimation(id, 0, 0f);
+
+        public void PlayAnimation(string id, int layer) => PlayAnimation(id, layer, 0f);
+
+        public void PlayAnimation(string id, float progress) => PlayAnimation(id, 0, progress);
+
+        public void PlayAnimation(string id, int layer, float progress)
         {
             if (!Animator.isActiveAndEnabled)
                 return;
 
             Animation anim = Animations.FirstOrDefault((s) => s.ID == id);
-            anim?.Play(Animator);
+            anim?.Play(Animator, layer, progress);
         }
 
         public void PlaySound(AudioClip clip, float startTime = 0f)
@@ -98,15 +104,15 @@ namespace SwiftKraft.Gameplay.Weapons
             public string ID;
             public State[] States;
 
-            public void Play(Animator anim)
+            public void Play(Animator anim, int layer = 0, float progress = 0f)
             {
                 State cur = States.GetWeightedRandom();
                 cur.OnPlay?.Invoke();
 
                 if (cur.CrossFade <= 0f)
-                    anim.Play(cur.StateName, 0, 0f);
+                    anim.Play(cur.StateName, layer, progress);
                 else
-                    anim.CrossFadeInFixedTime(cur.StateName, cur.CrossFade, 0, 0f);
+                    anim.CrossFadeInFixedTime(cur.StateName, cur.CrossFade, layer, progress);
 
                 anim.Update(0f);
 

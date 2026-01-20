@@ -22,6 +22,8 @@ namespace SwiftKraft.Utils
         /// </summary>
         public float CurrentValue { get; set; }
 
+        public bool Finished => !Interpolating;
+
         /// <summary>
         /// Called when the value stops interpolating.
         /// </summary>

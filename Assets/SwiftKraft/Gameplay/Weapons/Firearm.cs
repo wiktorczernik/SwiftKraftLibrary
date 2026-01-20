@@ -1,8 +1,11 @@
 using SwiftKraft.Gameplay.Common.FPS.ViewModels;
 using SwiftKraft.Gameplay.Interfaces;
 using SwiftKraft.Gameplay.Inventory.Items;
+using SwiftKraft.Gameplay.Motors;
 using SwiftKraft.Utils;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,6 +21,11 @@ namespace SwiftKraft.Gameplay.Weapons
         public Shoot AttackState;
         public Idle IdleState = new();
         public Reload ReloadState = new();
+
+        [Header("Aim Transitions")]
+        public bool UseAimTransition = false;
+        public string AimInAnimationID = "AdsIn";
+        public string AimOutAnimationID = "AdsOut";
 
         [field: SerializeField]
         public bool Automatic { get; set; }
@@ -39,17 +47,33 @@ namespace SwiftKraft.Gameplay.Weapons
         }
 
         public CameraManager CameraManager { get; private set; }
+        public MotorBase Motor { get; private set; }
         [Header("Aiming")]
         public float CameraFOV = 70f;
         public float ViewModelFOV = 45f;
 
-        public bool WishAim => Input.GetKey(KeyCode.Mouse1);
+        public bool WishAim
+        {
+            get => _wishAim; 
+            set
+            {
+                if (UseAimTransition && _wishAim != value && CurrentState == IdleStateInstance && (Motor == null || !BusyMotorStates.Contains(Motor.State)))
+                    OnAimTransition?.Invoke(value ? AimInAnimationID : AimOutAnimationID, AimInterpolater.Finished ? 0f : 1f - AimInterpolater.GetPercentage());
+
+                _wishAim = value;
+            }
+        }
+        bool _wishAim;
+
+        public UnityEvent<string, float> OnAimTransition;
 
         public float AimProgress => AimInterpolater.CurrentValue;
 
         public float AimSpreadMultiplier = 0.075f;
 
         public SmoothDampInterpolater AimInterpolater;
+
+        public List<int> BusyMotorStates = new() { 2 };
 
         CameraManager.FOVOverride.Override mainCamOverride;
         CameraManager.FOVOverride.Override viewModelOverride;
@@ -66,6 +90,7 @@ namespace SwiftKraft.Gameplay.Weapons
             IdleStateInstance = IdleState;
 
             CameraManager = GetComponentInParent<CameraManager>();
+            Motor = GetComponentInParent<MotorBase>();
 
             hasCamera = CameraManager != null;
 
@@ -99,9 +124,10 @@ namespace SwiftKraft.Gameplay.Weapons
         {
             base.Update();
 
-            bool wishAim = WishAim;
+            if (PlayerControlled)
+                WishAim = Input.GetKey(KeyCode.Mouse1);
 
-            AimInterpolater.MaxValue = wishAim ? 1f : 0f;
+            AimInterpolater.MaxValue = WishAim ? 1f : 0f;
             AimInterpolater.Tick(Time.deltaTime);
 
             if (spreadMod != null)
@@ -109,12 +135,12 @@ namespace SwiftKraft.Gameplay.Weapons
 
             if (hasCamera)
             {
-                mainCamOverride.Active = wishAim;
-                viewModelOverride.Active = wishAim;
+                mainCamOverride.Active = WishAim;
+                viewModelOverride.Active = WishAim;
             }
         }
 
-        public override bool Attack() => CurrentAmmo > 0 && CurrentState == IdleStateInstance && base.Attack();
+        public override bool Attack() => (Motor == null || !BusyMotorStates.Contains(Motor.State)) && CurrentAmmo > 0 && CurrentState == IdleStateInstance && base.Attack();
 
         public virtual bool StartReload()
         {

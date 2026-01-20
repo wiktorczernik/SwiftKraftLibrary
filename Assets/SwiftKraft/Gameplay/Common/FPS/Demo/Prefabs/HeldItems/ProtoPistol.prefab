@@ -4941,16 +4941,36 @@ MonoBehaviour:
     - TotalTime: 2.5
       FillTime: 1.15
       AmmoCount: 0
+  UseAimTransition: 1
+  AimInAnimationID: AdsIn
+  AimOutAnimationID: AdsOut
   <Automatic>k__BackingField: 0
   <BulletCount>k__BackingField: 1
-  <MaxAmmo>k__BackingField: 18
+  <MaxAmmo>k__BackingField: 4
   CameraFOV: 70
   ViewModelFOV: 45
+  OnAimTransition:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7466739221878732527}
+        m_TargetAssemblyTypeName: SwiftKraft.Gameplay.Weapons.ViewModelAnimator,
+          Assembly-CSharp
+        m_MethodName: PlayAnimation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   AimSpreadMultiplier: 0.075
   AimInterpolater:
     <MaxValue>k__BackingField: 0
     <SmoothTime>k__BackingField: 0.1
     SnapRange: 0.00001
+  BusyMotorStates: 02000000
 --- !u!114 &7543653201352354883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6533,6 +6553,24 @@ MonoBehaviour:
   - ID: Reload
     States:
     - StateName: Reload
+      CrossFade: 0.1
+      Weight: 5
+      OnPlay:
+        m_PersistentCalls:
+          m_Calls: []
+      Sounds: []
+  - ID: AdsIn
+    States:
+    - StateName: AdsIn
+      CrossFade: 0.1
+      Weight: 5
+      OnPlay:
+        m_PersistentCalls:
+          m_Calls: []
+      Sounds: []
+  - ID: AdsOut
+    States:
+    - StateName: AdsOut
       CrossFade: 0.1
       Weight: 5
       OnPlay:
